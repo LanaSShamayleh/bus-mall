@@ -1,0 +1,66 @@
+*{
+    box-sizing: border-box;
+}
+html{
+    width: 100%;
+    text-align: center;
+    background-color: rgba(253, 255, 116, 0.61);
+    color: rgb(36, 44, 78);
+}
+header{
+    font-size: xx-large;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    background-color: rgba(128, 169, 245, 0.432);
+    color: rgb(42, 43, 35);
+}
+   
+
+.SecondColumn{
+    float: right;
+    width: 58rem;
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.results{
+    float: left;
+    width: 50%;
+    display:table;
+    }
+
+.products img {
+    width: 400px;
+    height: 400px;
+    border: rgba(0, 83, 238, 0.432) groove 2px;
+    box-sizing: content-box;
+    margin: 2rem 0.5rem;
+}
+
+p{
+    font-size: large;
+    border: rgb(21, 28, 31);
+    align-items: stretch;
+}
+
+button {
+    color: rgb(254, 255, 209);
+    font-size: large;
+    margin: 2rem 0.5rem;
+}
+
+button:hover{
+    background-color: rgba(250, 128, 114, 0.788);
+    border-color:salmon;
+}
+ul li{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: large;
+    list-style-type:upper-latin;
+    float: left;
+    margin-top: 50px;
+}
+ul{
+    background-color: rgb(237, 245, 248);
+    border: rgb(164, 206, 224) groove 1px;
+}
