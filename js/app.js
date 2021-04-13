@@ -4,6 +4,7 @@ let productsArray = [];
 let leftImageElement = document.getElementById('leftImageElement');
 let rightImageElement = document.getElementById('rightImageElement');
 let middleImageElement = document.getElementById('middleImageElement');
+let container=document.getElementsByClassName('products')[0];
 let leftImageIndex;
 let rightImageIndex;
 let middleImageIndex;
@@ -12,6 +13,7 @@ let userAttemptsCounter=0;
 let button=document.createElement('button');
 let resultsDiv = document.getElementsByClassName('resultsColumn')[0];
 let resultsList = document.createElement('ul');
+button.hidden=true;
 
 // Creating a constructor function that creates an object associated with each product.
 
@@ -75,10 +77,10 @@ renderThreeImages();
 
 // Attaching an event listener to the section of the HTML page where the images are going to be displayed:
 
-leftImageElement.addEventListener('click',handleUserClick);
-rightImageElement.addEventListener('click',handleUserClick);
+container.addEventListener('click',handleUserClick);
 
 function viewResults(event) {
+  button.hidden=true;
   console.log(event.target.value);
   resultsDiv.appendChild(resultsList);
   let listItem;
@@ -103,11 +105,10 @@ function handleUserClick(event){
     }
     renderThreeImages();
   } else {
+    button.hidden=false;
     resultsDiv.appendChild(button);
     button.textContent = 'View Results';
     button.addEventListener('click', viewResults);
-    leftImageElement.removeEventListener('click', handleUserClick);
-    middleImageElement.removeEventListener('click', handleUserClick);
-    rightImageElement.removeEventListener('click', handleUserClick);
+    container.removeEventListener('click', handleUserClick);
   }
 }
