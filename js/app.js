@@ -56,13 +56,14 @@ function generateRandomIndex() {
 
 function renderThreeImages() {
 
-  leftImageIndex = generateRandomIndex();
+
+  do {
+    leftImageIndex = generateRandomIndex();
+
+  } while (previousImages.includes(leftImageIndex));
   do {
     middleImageIndex = generateRandomIndex();
-  } while (middleImageIndex === leftImageIndex);
-  do {
-    rightImageIndex = generateRandomIndex();
-  } while (rightImageIndex === leftImageIndex || rightImageIndex === middleImageIndex);
+  } while (middleImageIndex === leftImageIndex || previousImages.includes(middleImageIndex));
   do {
     rightImageIndex = generateRandomIndex();
   } while (rightImageIndex === leftImageIndex || rightImageIndex === middleImageIndex || previousImages.includes(rightImageIndex));
@@ -78,7 +79,6 @@ function renderThreeImages() {
 }
 
 renderThreeImages();
-
 
 function chartRendering() {
   // eslint-disable-next-line no-unused-vars
