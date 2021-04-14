@@ -14,19 +14,9 @@ let button = document.createElement('button');
 let resultsDiv = document.getElementsByClassName('resultsColumn')[0];
 let resultsList = document.createElement('ul');
 let barChart = document.getElementById('dataChart').getContext('2d');
-let nameArray = [];
-let arrOfNames = [];
-let arrOfSelected = [];
-let arrOfShown = [];
-let productVotes = [], productOccurrences = [], productNames = [] ;
+let productVotes = [], productOccurrences = [], productNames = [] ,previousImages=[];
 
 // Creating a constructor function that creates an object associated with each product.
-
-if (productsArray) {
-  button.hidden = false;
-} else {
-  button.hidden = true;
-}
 
 function Products(name, source) {
   this.name = name;
@@ -57,9 +47,6 @@ new Products('usb', 'img/usb.gif');
 new Products('water-can', 'img/water-can.jpg');
 new Products('wine-glass', 'img/wine-glass.jpg');
 
-for (let i = 0; i < productsArray.length; i++) {
-  nameArray[i] = productsArray[i].name;
-}
 // Creating an algorithm that will randomly generate three unique product images from the images directory and display them side-by-side-by-side in the browser window.
 
 
@@ -76,7 +63,10 @@ function renderThreeImages() {
   do {
     rightImageIndex = generateRandomIndex();
   } while (rightImageIndex === leftImageIndex || rightImageIndex === middleImageIndex);
-
+  do {
+    rightImageIndex = generateRandomIndex();
+  } while (rightImageIndex === leftImageIndex || rightImageIndex === middleImageIndex || previousImages.includes(rightImageIndex));
+  previousImages = [leftImageIndex, middleImageIndex, rightImageIndex];
   leftImageElement.src = productsArray[leftImageIndex].source;
   productsArray[leftImageIndex].occurrence++;
 
@@ -92,39 +82,31 @@ renderThreeImages();
 
 function chartRendering() {
   // eslint-disable-next-line no-unused-vars
-  var chart = new Chart(barChart, {
+  let chart = new Chart(barChart, {
     type: 'bar',
     data: {
-      labels: arrOfNames,
+      labels: productNames,
       datasets: [{
         label: 'Times Selected',
         backgroundColor: '#daa520',
         borderColor: '#daa520',
-        data: arrOfSelected,
-      }, {
+        data: productVotes,
+      },
+
+      {
         label: 'Times Shown',
         backgroundColor: 'rgb(28, 158, 61)',
         borderColor: 'rgb(28, 158, 61)',
-        data: arrOfShown,
+        data: productOccurrences,
       }]
     },
-    options: {
-      scales: {
-        yAxes: [{
-          ticks: {
-            min: 0,
-            stepSize: 1
-          }
-        }]
-      }
-    }
+    options: {}
+
   });
 }
 
 // Attaching an event listener to the section of the HTML page where the images are going to be displayed:
 container.addEventListener('click', handleUserClick);
-button.addEventListener('click', handleUserClick);
-
 
 function viewResults(event) {
   button.hidden = true;
@@ -138,7 +120,6 @@ function viewResults(event) {
     productOccurrences.push(productsArray[i].occurrence);
     productNames.push(productsArray[i].name);
   }
-  button.removeEventListener('click', viewResults);
 }
 
 
@@ -155,12 +136,16 @@ function handleUserClick(event) {
     }
     renderThreeImages();
   } else {
+    container.removeEventListener('click', handleUserClick);
+    for (let i = 0; i < productsArray.length; i++) {
+      productVotes.push(productsArray[i].votes);
+      productOccurrences.push(productsArray[i].occurrence);
+      productNames.push(productsArray[i].name);
+    }
     chartRendering();
-
     button.hidden = false;
     resultsDiv.appendChild(button);
     button.textContent = 'View Results';
     button.addEventListener('click', viewResults);
-    container.removeEventListener('click', handleUserClick);
   }
 }
