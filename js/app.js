@@ -14,7 +14,7 @@ let button = document.createElement('button');
 let resultsDiv = document.getElementsByClassName('resultsColumn')[0];
 let resultsList = document.createElement('ul');
 let barChart = document.getElementById('dataChart').getContext('2d');
-let productVotes = [], productOccurrences = [], productNames = [] ,previousImages=[];
+let productVotes = [], productOccurrences = [], productNames = [], previousImages = [];
 
 // Creating a constructor function that creates an object associated with each product.
 
@@ -47,6 +47,28 @@ new Products('usb', 'img/usb.gif');
 new Products('water-can', 'img/water-can.jpg');
 new Products('wine-glass', 'img/wine-glass.jpg');
 
+// gett the data from the local storage
+
+function getProducts() {
+
+  let proStringObj = localStorage.getItem('products');
+  let proObj = JSON.parse(proStringObj);
+
+  if (proObj !== null) {
+    productsArray = proObj;
+  }
+
+}
+
+// update the storage
+
+function setProducts() {
+
+  let proStringObj = JSON.stringify(productsArray);
+  localStorage.setItem('products', proStringObj);
+
+}
+
 // Creating an algorithm that will randomly generate three unique product images from the images directory and display them side-by-side-by-side in the browser window.
 
 
@@ -56,13 +78,14 @@ function generateRandomIndex() {
 
 function renderThreeImages() {
 
-  leftImageIndex = generateRandomIndex();
+
+  do {
+    leftImageIndex = generateRandomIndex();
+
+  } while (previousImages.includes(leftImageIndex));
   do {
     middleImageIndex = generateRandomIndex();
-  } while (middleImageIndex === leftImageIndex);
-  do {
-    rightImageIndex = generateRandomIndex();
-  } while (rightImageIndex === leftImageIndex || rightImageIndex === middleImageIndex);
+  } while (middleImageIndex === leftImageIndex || previousImages.includes(middleImageIndex));
   do {
     rightImageIndex = generateRandomIndex();
   } while (rightImageIndex === leftImageIndex || rightImageIndex === middleImageIndex || previousImages.includes(rightImageIndex));
@@ -104,6 +127,7 @@ function chartRendering() {
 
   });
 }
+getProducts();
 
 // Attaching an event listener to the section of the HTML page where the images are going to be displayed:
 container.addEventListener('click', handleUserClick);
@@ -116,9 +140,7 @@ function viewResults(event) {
     listItem = document.createElement('li');
     listItem.textContent = `${productsArray[i].name} had ${productsArray[i].votes} votes, and was seen ${productsArray[i].occurrence} times.`;
     resultsList.appendChild(listItem);
-    productVotes.push(productsArray[i].votes);
-    productOccurrences.push(productsArray[i].occurrence);
-    productNames.push(productsArray[i].name);
+
   }
 }
 
@@ -128,11 +150,14 @@ function handleUserClick(event) {
   if (userAttemptsCounter <= maxAttempts) {
     if (event.target.id === 'leftImageElement') {
       productsArray[leftImageIndex].votes++;
+      setProducts();
     } else if (event.target.id === 'middleImageElement') {
       productsArray[middleImageIndex].votes++;
+      setProducts();
     }
     else {
       productsArray[rightImageIndex].votes++;
+      setProducts();
     }
     renderThreeImages();
   } else {
